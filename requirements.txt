@@ -1,0 +1,5 @@
+telethon
+pymongo
+requests
+python-dotenv
+aiohttp
