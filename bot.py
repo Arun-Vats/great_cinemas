@@ -1,5 +1,6 @@
 # bot.py
 import os
+import asyncio
 from telethon import TelegramClient
 from dotenv import load_dotenv
 from database import get_videos_collection, get_users_collection
@@ -8,6 +9,7 @@ from handlers.user import register_user_handlers
 from handlers.common import register_common_handlers
 from config import API_ID, API_HASH, BOT_TOKEN, DATABASE_CHANNEL_ID, ADMIN_ID, MONGO_URI
 import logging
+from aiohttp import web
 
 # Set up basic logging
 logging.basicConfig(level=logging.INFO)
@@ -30,18 +32,28 @@ for var_name, var_value in required_vars.items():
         logger.error(f"Required environment variable '{var_name}' is not set. Exiting.")
         raise ValueError(f"Required environment variable '{var_name}' is not set.")
 
+# Initialize Telegram bot
 client = TelegramClient('bot', API_ID, API_HASH).start(bot_token=BOT_TOKEN)
 videos_collection = get_videos_collection(MONGO_URI)
 users_collection = get_users_collection(MONGO_URI)
 
+# Register handlers
 register_common_handlers(client, DATABASE_CHANNEL_ID, ADMIN_ID, videos_collection, users_collection)
 register_admin_handlers(client, DATABASE_CHANNEL_ID, ADMIN_ID, MONGO_URI, videos_collection, users_collection)
 register_user_handlers(client, videos_collection, users_collection)
 
-if __name__ == '__main__':
-    logger.info("Starting the bot...")
-    try:
-        client.run_until_disconnected()
-    except Exception as e:
-        logger.error(f"Bot failed to start: {e}")
-        raise
+# Dummy HTTP server for Koyeb health check
+async def health_check(request):
+    return web.Response(text="OK")
+
+app = web.Application()
+app.add_routes([web.get("/", health_check)])
+
+# Start bot and health check server
+async def main():
+    await client.run_until_disconnected()
+
+if __name__ == "__main__":
+    loop = asyncio.get_event_loop()
+    loop.create_task(web._run_app(app, port=8000))  # Dummy HTTP server for Koyeb
+    loop.run_until_complete(main())
