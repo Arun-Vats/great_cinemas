@@ -43,17 +43,6 @@ START_MESSAGE = (
 )
 NO_RESULTS_MESSAGE = "✖️ No results found for <b>{query}</b>.\n 🤫Our database is updated daily, so you may try again later or check your spelling."
 
-SEARCH_RESULT_MESSAGE = (
-    "{emoji_type} <b>{type}</b> :- <a href='{poster_url}'>{name}</a>\n"
-    "{emoji_release} {release_line}"
-    "{emoji_rating} {rating_line}"
-    "{emoji_duration} {duration_line}"
-    "{emoji_season} {season_line}"
-    "{emoji_audio} {audio_line}"
-    "{emoji_genre} {genre_line}"
-    "{emoji_trailer} {trailer_line}"
-    "{emoji_platforms} {platforms_line}"
-)
 EMOJI_TYPE = "🎬"
 EMOJI_RELEASE = "📅"
 EMOJI_RATING = "⭐"
@@ -63,6 +52,7 @@ EMOJI_AUDIO = "🔊"
 EMOJI_GENRE = "🎭"
 EMOJI_TRAILER = "🎞️"
 EMOJI_PLATFORMS = "📡"
+
 POST_CONTENT_PROMPT_MESSAGE = "📬 Please send the post content you want to share in the main channel."
 
 FALLBACK_SEARCH_RESULT_MESSAGE = "🔍 Search Result For <b>{query}</b>"
